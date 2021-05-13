@@ -25,7 +25,6 @@ git subtree push --prefix website origin gh-pages
 
 == todo
 
-* [ ] Add game over
 * [ ] Add jumper image (Caleb), platform, and stage images
 * [ ] add WASD controls
 * [ ] make jumper upward draw advancement stop and only move the
@@ -60,4 +59,5 @@ github pages
 * [x] _Add jumper character_
 * [x] _Make jumper jump off of platforms_
 * [x] _Add user keyboard control_
-* [x] _Add score board_
+* [x] _Add scoreboard_
+* [x] _Add game over_
