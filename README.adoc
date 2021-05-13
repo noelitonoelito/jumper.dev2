@@ -41,31 +41,27 @@ git subtree push --prefix website origin gh-pages
 
 == todo
 
-* [ ] make jumper upward draw advancement stop and only move the
-platforms downward draw at the same speed the character is able to move up. this
-will stop the jumper from moving past the top of the stage
-* [ ] move stage background image as stage advances to give it
-a parallax effect
-* [ ] add touchscreen controls
-* [ ] add full screen mode
-* [ ] force portrait mode
-* [ ] add restart game button on game over screen
-* [ ] add character selection
-* [ ] add Zobie character
-* [ ] add favicon
-* [ ] make game a PWA (progressive web app) that works in
-github pages
-* [ ] add Bob character
-* [ ] add Sophia character
-* [ ] add game sounds
-* [ ] keep track of personal high score
-* [ ] place platforms at random heights
-* [ ] add narrow platforms
-* [ ] add breaking platforms
-* [ ] add horizontal moving platforms
-* [ ] add vertical moving platforms
-* [ ] add randomly moving platforms
-* [ ] add group high score board (having groups will limit cheating)
+* [ ] Move stage background image as stage advances to give it a
+parallax effect.
+* [ ] Add touchscreen controls
+* [ ] Add full screen mode
+* [ ] Force portrait mode
+* [ ] Add restart game button on game over screen
+* [ ] Add character selection
+* [ ] Add Zobie character
+* [ ] Add favicon
+* [ ] Make game a PWA (progressive web app) that works in github pages.
+* [ ] Add Bob character
+* [ ] Add Sophia character
+* [ ] Add game sounds
+* [ ] Keep track of personal high score
+* [ ] Place platforms at random heights
+* [ ] Add narrow platforms
+* [ ] Add breaking platforms
+* [ ] Add horizontal moving platforms
+* [ ] Add vertical moving platforms
+* [ ] Add randomly moving platforms
+* [ ] Add group high score board (having groups will limit cheating)
 * [x] _Add stage and a platform_
 * [x] _Draw multiple platforms_
 * [x] _Make platforms move down the stage_
@@ -76,4 +72,7 @@ github pages
 * [x] _Add scoreboard_
 * [x] _Add game over_
 * [x] _Add jumper image (Caleb), platform, and stage images_
-* [x] _add WASD controls_
+* [x] _Add WASD controls_
+* [x] _Make jumper upward draw advancement stop and only move the platforms
+downward draw at the same speed the character is able to move up. This will
+stop the jumper from moving past the top of the stage._
