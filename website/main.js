@@ -5,9 +5,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const stageWidth = 400
   const stageHeight = 600
   const platformStartingPosition = 100
+  const platformAdvancingLine = 400
   const platformCount = 5
   const stageMoveSpeed = 4
   const platformMoveSpeed = stageMoveSpeed
+  const jumperMaxHeight = 200
+  const jumperJumpSpeed = 8
+  const jumperFallSpeed = 5
   // #endregion Game settings
 
   class Game {
@@ -25,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     isStageAdvancing() {
-      return false
+      return this.jumper.bottom > platformAdvancingLine
     }
 
     start() {
@@ -54,6 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     _updateState() {
       this.platforms.updateState()
+      this.jumper.updateState()
     }
   }
 
@@ -65,10 +70,16 @@ document.addEventListener("DOMContentLoaded", () => {
     bottom = 150
     right = this.left + this.width
     top = this.bottom + this.height
+    isJumping = true
+    jumpStartPoint = this.bottom
+    needsToDraw = true
 
     constructor() {
       this.draw = this.draw.bind(this)
+      this.updateState = this.updateState.bind(this)
       this.setStartingPlatform = this.setStartingPlatform.bind(this)
+      this._fall = this._fall.bind(this)
+      this._jump = this._jump.bind(this)
       this._updateContainerBox = this._updateContainerBox.bind(this)
 
       this.element = document.createElement("div")
@@ -77,14 +88,48 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     draw() {
+      if (!this.needsToDraw) { return }
       this.element.style.left = `${this.left}px`
       this.element.style.bottom = `${this.bottom}px`
+      this.needsToDraw = false
+    }
+
+    updateState() {
+      // update vertical position
+      if (this.isJumping) {
+        this.bottom += jumperJumpSpeed
+      } else {
+        this.bottom -= jumperFallSpeed
+      }
+
+      this._updateContainerBox()
+
+      // reached max jump height; start falling
+      if (this.bottom > this.jumpStartPoint + jumperMaxHeight) {
+        this._fall()
+      }
+
+      // landed on platform; jump again
+      if (!this.isJumping && game.platforms.isOnAPlatform(this)) {
+        this.jumpStartPoint = this.bottom
+        this._jump()
+      }
+
+      this.needsToDraw = true
     }
 
     setStartingPlatform(platform) {
       this.left = platform.left
       this.bottom = platform.top
       this._updateContainerBox()
+    }
+
+    _fall() {
+      this.isJumping = false
+    }
+
+    _jump() {
+      this.isJumping = true
     }
 
     _updateContainerBox() {
@@ -161,6 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
       this.createPlatforms = this.createPlatforms.bind(this)
       this.draw = this.draw.bind(this)
       this.getLowestPlatform = this.getLowestPlatform.bind(this)
+      this.isOnAPlatform = this.isOnAPlatform.bind(this)
       this.updateState = this.updateState.bind(this)
     }
 
@@ -179,6 +225,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     getLowestPlatform() {
       return this.listOfPlatforms[0]
+    }
+
+    isOnAPlatform(jumper) {
+      return this.listOfPlatforms.some((platform) => {
+        const isHorizontallyOnPlatform = jumper.bottom >= platform.bottom &&
+          jumper.bottom <= platform.top
+        const isVerticallyOnPlatform = jumper.right >= platform.left &&
+          jumper.left <= platform.right
+        return isHorizontallyOnPlatform && isVerticallyOnPlatform
+      })
     }
 
     updateState() {
