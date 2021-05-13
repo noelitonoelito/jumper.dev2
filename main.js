@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const platformStartingPosition = 100
   const platformAdvancingLine = 400
   const platformCount = 5
+  const stageMoveSpeed = 1
   const jumperMaxHeight = 200
   const jumperJumpSpeed = 8
   const jumperFallSpeed = 5
@@ -23,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
     score = 0
     updateLoopTicker
     drawLoopTicker
+    backgroundY = 0
     needsToDraw = true
 
     constructor() {
@@ -80,6 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     _draw() {
       if (this.needsToDraw) {
+        this.stage.style.backgroundPositionY = `${this.backgroundY}px`
         this.scoreBoard.innerHTML = Math.floor(this.score)
         this.needsToDraw = false
       }
@@ -112,6 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     _updateState() {
       if (this.isStageAdvancing()) {
+        this.backgroundY += stageMoveSpeed
         this.score += scoreIncreaseRate
         this.needsToDraw = true
       }
