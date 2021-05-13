@@ -41,8 +41,6 @@ git subtree push --prefix website origin gh-pages
 
 == todo
 
-* [ ] Move stage background image as stage advances to give it a
-parallax effect.
 * [ ] Add touchscreen controls
 * [ ] Add full screen mode
 * [ ] Force portrait mode
@@ -76,3 +74,5 @@ parallax effect.
 * [x] _Make jumper upward draw advancement stop and only move the platforms
 downward draw at the same speed the character is able to move up. This will
 stop the jumper from moving past the top of the stage._
+* [x] _Move stage background image as stage advances to give it a
+parallax effect._
