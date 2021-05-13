@@ -67,6 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
       this.draw = this.draw.bind(this)
       this.updateState = this.updateState.bind(this)
       this._placeAtRandomLeft = this._placeAtRandomLeft.bind(this)
+      this._placeAtTop = this._placeAtTop.bind(this)
       this._updateContainerBox = this._updateContainerBox.bind(this)
 
       this.bottom = newPlatformBottom
@@ -89,11 +90,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
       this.bottom -= platformMoveSpeed
       this._updateContainerBox()
+
+      if (this.top < 0) {
+        this._placeAtTop()
+        this._placeAtRandomLeft()
+        this._updateContainerBox()
+      }
+
       this.needsToDraw = true
     }
 
     _placeAtRandomLeft() {
       this.left = Math.floor(Math.random() * (stageWidth - this.width))
+    }
+
+    _placeAtTop() {
+      this.bottom = stageHeight
     }
 
     _updateContainerBox() {
