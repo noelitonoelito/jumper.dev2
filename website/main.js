@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateLoopTicker
     drawLoopTicker
     backgroundY = 0
+    isTouchEnabled = false
     needsToDraw = true
 
     constructor() {
@@ -40,6 +41,10 @@ document.addEventListener("DOMContentLoaded", () => {
       this._startUpdateLoop = this._startUpdateLoop.bind(this)
       this._updateState = this._updateState.bind(this)
       this._watchUserActions = this._watchUserActions.bind(this)
+
+      this.isTouchEnabled = "ontouchstart" in window ||
+        navigator.maxTouchPoints > 0 ||
+        navigator.msMaxTouchPoints > 0
     }
 
     gameOver() {
@@ -125,8 +130,53 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     _watchUserActions() {
+      const leftButton = document.getElementById("leftButton")
+      const rightButton = document.getElementById("rightButton")
+
       document.addEventListener("keydown", this._keyPushedDown)
       document.addEventListener("keyup", this._keyReleased)
+
+      leftButton.addEventListener(
+        "mousedown",
+        this.jumper.moveLeft,
+        { passive: true }
+      )
+      leftButton.addEventListener(
+        "mouseup",
+        this.jumper.moveStraight,
+        { passive: true }
+      )
+      leftButton.addEventListener(
+        "touchstart",
+        this.jumper.moveLeft,
+        { passive: true }
+      )
+      leftButton.addEventListener(
+        "touchend",
+        this.jumper.moveStraight,
+        { passive: true }
+      )
+
+      rightButton.addEventListener(
+        "mousedown",
+        this.jumper.moveRight,
+        { passive: true }
+      )
+      rightButton.addEventListener(
+        "mouseup",
+        this.jumper.moveStraight,
+        { passive: true }
+      )
+      rightButton.addEventListener(
+        "touchstart",
+        this.jumper.moveRight,
+        { passive: true }
+      )
+      rightButton.addEventListener(
+        "touchend",
+        this.jumper.moveStraight,
+        { passive: true }
+      )
     }
   }
 
