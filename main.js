@@ -21,12 +21,17 @@ document.addEventListener("DOMContentLoaded", () => {
     scoreBoard
     jumper
     platforms
+    isGameOver = false
     score = 0
+    updateLoopTicker
+    drawLoopTicker
     needsToDraw = true
 
     constructor() {
+      this.gameOver = this.gameOver.bind(this)
       this.isStageAdvancing = this.isStageAdvancing.bind(this)
       this.start = this.start.bind(this)
+      this._createAndDrawGameOver = this._createAndDrawGameOver.bind(this)
       this._createScoreBoard = this._createScoreBoard.bind(this)
       this._draw = this._draw.bind(this)
       this._keyPushedDown = this._keyPushedDown.bind(this)
@@ -35,6 +40,13 @@ document.addEventListener("DOMContentLoaded", () => {
       this._startUpdateLoop = this._startUpdateLoop.bind(this)
       this._updateState = this._updateState.bind(this)
       this._watchUserActions = this._watchUserActions.bind(this)
+    }
+
+    gameOver() {
+      this.isGameOver = true
+      clearInterval(this.updateLoopTicker)
+      clearInterval(this.drawLoopTicker)
+      this._createAndDrawGameOver()
     }
 
     isStageAdvancing() {
@@ -52,6 +64,13 @@ document.addEventListener("DOMContentLoaded", () => {
       this._watchUserActions()
       this._startUpdateLoop()
       this._startDrawLoop()
+    }
+
+    _createAndDrawGameOver() {
+      const gameOver = document.createElement("div")
+      gameOver.id = "gameOver"
+      gameOver.innerHTML = "Game Over"
+      this.stage.appendChild(gameOver)
     }
 
     _createScoreBoard() {
@@ -84,11 +103,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     _startUpdateLoop() {
-      setInterval(this._updateState, gameUpdateSpeedInMilliseconds)
+      this.updateLoopTicker =
+        setInterval(this._updateState, gameUpdateSpeedInMilliseconds)
     }
 
     _startDrawLoop() {
-      setInterval(this._draw, gameDrawSpeedInMilliseconds)
+      this.drawLoopTicker =
+        setInterval(this._draw, gameDrawSpeedInMilliseconds)
     }
 
     _updateState() {
@@ -123,10 +144,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     constructor() {
       this.draw = this.draw.bind(this)
+      this.updateState = this.updateState.bind(this)
       this.moveLeft = this.moveLeft.bind(this)
       this.moveRight = this.moveRight.bind(this)
       this.moveStraight = this.moveStraight.bind(this)
-      this.updateState = this.updateState.bind(this)
       this.setStartingPlatform = this.setStartingPlatform.bind(this)
       this._fall = this._fall.bind(this)
       this._jump = this._jump.bind(this)
@@ -160,6 +181,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     updateState() {
+      if (game.isGameOver) { return }
+
       // update vertical position
       if (this.isJumping) {
         this.bottom += jumperJumpSpeed
@@ -175,6 +198,11 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       this._updateContainerBox()
+
+      // hit bottom of stage
+      if (this.top <= 0) {
+        game.gameOver()
+      }
 
       // reached max jump height; start falling
       if (this.bottom > this.jumpStartPoint + jumperMaxHeight) {
