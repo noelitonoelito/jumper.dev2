@@ -25,7 +25,6 @@ git subtree push --prefix website origin gh-pages
 
 == todo
 
-* [ ] Place platforms at top of stage after they go below stage bottom
 * [ ] Add jumper character
 * [ ] Make jumper jump off of platforms
 * [ ] Add user keyboard control
@@ -61,3 +60,4 @@ github pages
 * [x] _Add stage and a platform_
 * [x] _Draw multiple platforms_
 * [x] _Make platforms move down the stage_
+* [x] _Place platforms at top of stage after they go below stage bottom_
