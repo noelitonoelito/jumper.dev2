@@ -91,9 +91,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     _keyPushedDown(e) {
-      if (e.key === "ArrowLeft") {
+      if (["ArrowLeft", "a", "A"].includes(e.key)) {
         this.jumper.moveLeft()
-      } else if (e.key === "ArrowRight") {
+      } else if (["ArrowRight", "d", "D"].includes(e.key)) {
         this.jumper.moveRight()
       }
     }
