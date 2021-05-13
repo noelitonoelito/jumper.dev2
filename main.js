@@ -137,10 +137,13 @@ document.addEventListener("DOMContentLoaded", () => {
     right = this.left + this.width
     top = this.bottom + this.height
     isJumping = true
+    isFacingRight = true
     jumpStartPoint = this.bottom
     isMovingLeft = false
     isMovingRight = false
     needsToDraw = true
+    needsToUpdateFlipCssClass = true
+    needsToUpdateJumpingCssClass = false
 
     constructor() {
       this.draw = this.draw.bind(this)
@@ -160,17 +163,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
     draw() {
       if (!this.needsToDraw) { return }
+
+      if (this.needsToUpdateFlipCssClass) {
+        if (this.isFacingRight) {
+          this.element.classList.add("flip")
+        } else {
+          this.element.classList.remove("flip")
+        }
+
+        this.needsToUpdateFlipCssClass = false
+      }
+
+      if (this.needsToUpdateJumpingCssClass) {
+        if (this.isJumping) {
+          this.element.classList.add("jumping")
+        } else {
+          this.element.classList.remove("jumping")
+        }
+
+        this.needsToUpdateJumpingCssClass = false
+      }
+
       this.element.style.left = `${this.left}px`
       this.element.style.bottom = `${this.bottom}px`
       this.needsToDraw = false
     }
 
     moveLeft() {
+      if (this.isFacingRight) { this.needsToUpdateFlipCssClass = true }
+
+      this.isFacingRight = false
       this.isMovingLeft = true
       this.isMovingRight = false
     }
 
     moveRight() {
+      if (!this.isFacingRight) { this.needsToUpdateFlipCssClass = true }
+
+      this.isFacingRight = true
       this.isMovingLeft = false
       this.isMovingRight = true
     }
@@ -225,10 +255,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     _fall() {
+      if (this.isJumping) { this.needsToUpdateJumpingCssClass = true }
       this.isJumping = false
     }
 
     _jump() {
+      if (!this.isJumping) { this.needsToUpdateJumpingCssClass = true }
       this.isJumping = true
     }
 
