@@ -13,16 +13,21 @@ document.addEventListener("DOMContentLoaded", () => {
   const jumperJumpSpeed = 8
   const jumperFallSpeed = 5
   const jumperLeftRightSpeed = 6
+  const scoreIncreaseRate = 0.1
   // #endregion Game settings
 
   class Game {
     stage
+    scoreBoard
     jumper
     platforms
+    score = 0
+    needsToDraw = true
 
     constructor() {
       this.isStageAdvancing = this.isStageAdvancing.bind(this)
       this.start = this.start.bind(this)
+      this._createScoreBoard = this._createScoreBoard.bind(this)
       this._draw = this._draw.bind(this)
       this._keyPushedDown = this._keyPushedDown.bind(this)
       this._keyReleased = this._keyReleased.bind(this)
@@ -40,6 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
       this.stage = document.getElementById("stage")
       this.jumper = new Jumper()
       this.platforms = new Platforms()
+      this._createScoreBoard()
       this.platforms.createPlatforms()
       this.jumper.setStartingPlatform(this.platforms.getLowestPlatform())
 
@@ -48,7 +54,19 @@ document.addEventListener("DOMContentLoaded", () => {
       this._startDrawLoop()
     }
 
+    _createScoreBoard() {
+      this.scoreBoard = document.createElement("div")
+      this.scoreBoard.id = "scoreBoard"
+      this.scoreBoard.innerHTML = this.score
+      this.stage.appendChild(this.scoreBoard)
+    }
+
     _draw() {
+      if (this.needsToDraw) {
+        this.scoreBoard.innerHTML = Math.floor(this.score)
+        this.needsToDraw = false
+      }
+
       this.platforms.draw()
       this.jumper.draw()
     }
@@ -74,6 +92,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     _updateState() {
+      if (this.isStageAdvancing()) {
+        this.score += scoreIncreaseRate
+        this.needsToDraw = true
+      }
+
       this.platforms.updateState()
       this.jumper.updateState()
     }

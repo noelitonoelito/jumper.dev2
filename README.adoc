@@ -25,7 +25,6 @@ git subtree push --prefix website origin gh-pages
 
 == todo
 
-* [ ] Add score board
 * [ ] Add game over
 * [ ] Add jumper image (Caleb), platform, and stage images
 * [ ] add WASD controls
@@ -61,3 +60,4 @@ github pages
 * [x] _Add jumper character_
 * [x] _Make jumper jump off of platforms_
 * [x] _Add user keyboard control_
+* [x] _Add score board_

@@ -22,3 +22,17 @@
   background-color: #ff0000;
   position: absolute;
 }
+
+#scoreBoard {
+  z-index: 4;
+  position: absolute;
+  text-align: right;
+  min-width: 50px;
+  top: 20px;
+  right: 20px;
+  border: solid 2px black;
+  padding: 2px;
+  font-size: xx-large;
+  background-color: orange;
+  font-weight: 900;
+}
