@@ -25,7 +25,6 @@ git subtree push --prefix website origin gh-pages
 
 == todo
 
-* [ ] Draw multiple platforms
 * [ ] Make platforms move down the stage
 * [ ] Place platforms at top of stage after they go below stage bottom
 * [ ] Add jumper character
@@ -60,4 +59,5 @@ github pages
 * [ ] add vertical moving platforms
 * [ ] add randomly moving platforms
 * [ ] add group high score board (having groups will limit cheating)
-* [x] Add stage and a platform
+* [x] _Add stage and a platform_
+* [x] _Draw multiple platforms_

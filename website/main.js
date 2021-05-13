@@ -3,11 +3,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const gameDrawSpeedInMilliseconds = 30
   const stageWidth = 400
   const stageHeight = 600
+  const platformStartingPosition = 100
+  const platformCount = 5
   // #endregion Game settings
 
   class Game {
     stage
-    platform
+    platforms
 
     constructor() {
       this.start = this.start.bind(this)
@@ -17,13 +19,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     start() {
       this.stage = document.getElementById("stage")
-      this.platform = new Platform(50)
+      this.platforms = new Platforms()
+      this.platforms.createPlatforms()
 
       this._startDrawLoop()
     }
 
     _draw() {
-      this.platform.draw()
+      this.platforms.draw()
     }
 
     _startDrawLoop() {
@@ -65,6 +68,28 @@ document.addEventListener("DOMContentLoaded", () => {
     _updateContainerBox() {
       this.right = this.left + this.width
       this.top = this.bottom + this.height
+    }
+  }
+
+  class Platforms {
+    listOfPlatforms = []
+
+    constructor() {
+      this.createPlatforms = this.createPlatforms.bind(this)
+      this.draw = this.draw.bind(this)
+    }
+
+    createPlatforms() {
+      for (let i = 0; i < platformCount; i++) {
+        const platformGap = stageHeight / platformCount
+        const newPlatformBottom = platformStartingPosition + (i * platformGap)
+        const newPlatform = new Platform(newPlatformBottom)
+        this.listOfPlatforms.push(newPlatform)
+      }
+    }
+
+    draw() {
+      this.listOfPlatforms.forEach((platform) => { platform.draw() })
     }
   }
 
