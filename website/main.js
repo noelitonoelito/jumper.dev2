@@ -1,10 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
   // #region Game settings
+  const gameUpdateSpeedInMilliseconds = 10
   const gameDrawSpeedInMilliseconds = 30
   const stageWidth = 400
   const stageHeight = 600
   const platformStartingPosition = 100
   const platformCount = 5
+  const stageMoveSpeed = 4
+  const platformMoveSpeed = stageMoveSpeed
   // #endregion Game settings
 
   class Game {
@@ -12,9 +15,16 @@ document.addEventListener("DOMContentLoaded", () => {
     platforms
 
     constructor() {
+      this.isStageAdvancing = this.isStageAdvancing.bind(this)
       this.start = this.start.bind(this)
       this._draw = this._draw.bind(this)
+      this._startUpdateLoop = this._startUpdateLoop.bind(this)
       this._startDrawLoop = this._startDrawLoop.bind(this)
+      this._updateState = this._updateState.bind(this)
+    }
+
+    isStageAdvancing() {
+      return true
     }
 
     start() {
@@ -22,6 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
       this.platforms = new Platforms()
       this.platforms.createPlatforms()
 
+      this._startUpdateLoop()
       this._startDrawLoop()
     }
 
@@ -29,8 +40,16 @@ document.addEventListener("DOMContentLoaded", () => {
       this.platforms.draw()
     }
 
+    _startUpdateLoop() {
+      setInterval(this._updateState, gameUpdateSpeedInMilliseconds)
+    }
+
     _startDrawLoop() {
       setInterval(this._draw, gameDrawSpeedInMilliseconds)
+    }
+
+    _updateState() {
+      this.platforms.updateState()
     }
   }
 
@@ -42,9 +61,11 @@ document.addEventListener("DOMContentLoaded", () => {
     right = 0
     top = 0
     bottom = 0
+    needsToDraw = true
 
     constructor(newPlatformBottom) {
       this.draw = this.draw.bind(this)
+      this.updateState = this.updateState.bind(this)
       this._placeAtRandomLeft = this._placeAtRandomLeft.bind(this)
       this._updateContainerBox = this._updateContainerBox.bind(this)
 
@@ -57,8 +78,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     draw() {
+      if (!this.needsToDraw) { return }
       this.element.style.left = `${this.left}px`
       this.element.style.bottom = `${this.bottom}px`
+      this.needsToDraw = false
+    }
+
+    updateState() {
+      if (!game.isStageAdvancing()) { return }
+
+      this.bottom -= platformMoveSpeed
+      this._updateContainerBox()
+      this.needsToDraw = true
     }
 
     _placeAtRandomLeft() {
@@ -77,6 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
     constructor() {
       this.createPlatforms = this.createPlatforms.bind(this)
       this.draw = this.draw.bind(this)
+      this.updateState = this.updateState.bind(this)
     }
 
     createPlatforms() {
@@ -90,6 +122,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     draw() {
       this.listOfPlatforms.forEach((platform) => { platform.draw() })
+    }
+
+    updateState() {
+      this.listOfPlatforms.forEach((platform) => { platform.updateState() })
     }
   }
 
