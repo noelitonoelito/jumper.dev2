@@ -10,6 +10,22 @@ over. The higher the user goes, the higher the score.
 
 This project was created using https://code.visualstudio.com[VS Code].
 
+== edit image svg source
+
+Svg images in the `./asset-source` directory were created using
+https://inkscape.org[Inkscape].
+
+== compress SVG files
+
+Used the online SVG compression tool https://www.svgminify.com/[SVG Minify] to
+make all SVG images as small as possible.
+
+For the best results with SVG Minify, I used Inkscape before uploading to:
+
+. deleted all unnecessary objects and layers from the SVG
+. select [Clean Up Document] from the [File] menu
+. save as a new SVG with the file type as "Plain SVG (*.svg)"
+
 == deploy to github pages
 
 In VS Code's [Terminal] menu, click [Run Task...] and select
@@ -25,7 +41,6 @@ git subtree push --prefix website origin gh-pages
 
 == todo
 
-* [ ] Add jumper image (Caleb), platform, and stage images
 * [ ] add WASD controls
 * [ ] make jumper upward draw advancement stop and only move the
 platforms downward draw at the same speed the character is able to move up. this
@@ -61,3 +76,4 @@ github pages
 * [x] _Add user keyboard control_
 * [x] _Add scoreboard_
 * [x] _Add game over_
+* [x] _Add jumper image (Caleb), platform, and stage images_
