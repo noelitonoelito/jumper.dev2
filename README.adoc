@@ -41,7 +41,6 @@ git subtree push --prefix website origin gh-pages
 
 == todo
 
-* [ ] add WASD controls
 * [ ] make jumper upward draw advancement stop and only move the
 platforms downward draw at the same speed the character is able to move up. this
 will stop the jumper from moving past the top of the stage
@@ -77,3 +76,4 @@ github pages
 * [x] _Add scoreboard_
 * [x] _Add game over_
 * [x] _Add jumper image (Caleb), platform, and stage images_
+* [x] _add WASD controls_
