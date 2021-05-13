@@ -1,0 +1,63 @@
+= jumper
+
+This project is for the purpose of learning how to make a basic game using
+vanilla HTML, javascript, and css. It is a game where a user controls a
+continuously jumping character left and right to land on randomly placed,
+advancing platforms. If the character falls below the game stage, it is game
+over. The higher the user goes, the higher the score.
+
+== code development
+
+This project was created using https://code.visualstudio.com[VS Code].
+
+== deploy to github pages
+
+In VS Code's [Terminal] menu, click [Run Task...] and select
+[Publish to github pages].
+
+You can also run the following command in the terminal at the root of the
+project.
+
+[source,sh]
+----
+git subtree push --prefix website origin gh-pages
+----
+
+== todo
+
+* [ ] Add stage and a platform
+* [ ] Draw multiple platforms
+* [ ] Make platforms move down the stage
+* [ ] Place platforms at top of stage after they go below stage bottom
+* [ ] Add jumper character
+* [ ] Make jumper jump off of platforms
+* [ ] Add user keyboard control
+* [ ] Add score board
+* [ ] Add game over
+* [ ] Add jumper image (Caleb), platform, and stage images
+* [ ] add WASD controls
+* [ ] make jumper upward draw advancement stop and only move the
+platforms downward draw at the same speed the character is able to move up. this
+will stop the jumper from moving past the top of the stage
+* [ ] move stage background image as stage advances to give it
+a parallax effect
+* [ ] add touchscreen controls
+* [ ] add full screen mode
+* [ ] force portrait mode
+* [ ] add restart game button on game over screen
+* [ ] add character selection
+* [ ] add Zobie character
+* [ ] add favicon
+* [ ] make game a PWA (progressive web app) that works in
+github pages
+* [ ] add Bob character
+* [ ] add Sophia character
+* [ ] add game sounds
+* [ ] keep track of personal high score
+* [ ] place platforms at random heights
+* [ ] add narrow platforms
+* [ ] add breaking platforms
+* [ ] add horizontal moving platforms
+* [ ] add vertical moving platforms
+* [ ] add randomly moving platforms
+* [ ] add group high score board (having groups will limit cheating)
