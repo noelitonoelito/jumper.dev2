@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const jumperMaxHeight = 200
   const jumperJumpSpeed = 8
   const jumperFallSpeed = 5
+  const jumperLeftRightSpeed = 6
   // #endregion Game settings
 
   class Game {
@@ -23,9 +24,12 @@ document.addEventListener("DOMContentLoaded", () => {
       this.isStageAdvancing = this.isStageAdvancing.bind(this)
       this.start = this.start.bind(this)
       this._draw = this._draw.bind(this)
-      this._startUpdateLoop = this._startUpdateLoop.bind(this)
+      this._keyPushedDown = this._keyPushedDown.bind(this)
+      this._keyReleased = this._keyReleased.bind(this)
       this._startDrawLoop = this._startDrawLoop.bind(this)
+      this._startUpdateLoop = this._startUpdateLoop.bind(this)
       this._updateState = this._updateState.bind(this)
+      this._watchUserActions = this._watchUserActions.bind(this)
     }
 
     isStageAdvancing() {
@@ -39,6 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
       this.platforms.createPlatforms()
       this.jumper.setStartingPlatform(this.platforms.getLowestPlatform())
 
+      this._watchUserActions()
       this._startUpdateLoop()
       this._startDrawLoop()
     }
@@ -46,6 +51,18 @@ document.addEventListener("DOMContentLoaded", () => {
     _draw() {
       this.platforms.draw()
       this.jumper.draw()
+    }
+
+    _keyPushedDown(e) {
+      if (e.key === "ArrowLeft") {
+        this.jumper.moveLeft()
+      } else if (e.key === "ArrowRight") {
+        this.jumper.moveRight()
+      }
+    }
+
+    _keyReleased(e) {
+      this.jumper.moveStraight()
     }
 
     _startUpdateLoop() {
@@ -60,6 +77,11 @@ document.addEventListener("DOMContentLoaded", () => {
       this.platforms.updateState()
       this.jumper.updateState()
     }
+
+    _watchUserActions() {
+      document.addEventListener("keydown", this._keyPushedDown)
+      document.addEventListener("keyup", this._keyReleased)
+    }
   }
 
   class Jumper {
@@ -72,10 +94,15 @@ document.addEventListener("DOMContentLoaded", () => {
     top = this.bottom + this.height
     isJumping = true
     jumpStartPoint = this.bottom
+    isMovingLeft = false
+    isMovingRight = false
     needsToDraw = true
 
     constructor() {
       this.draw = this.draw.bind(this)
+      this.moveLeft = this.moveLeft.bind(this)
+      this.moveRight = this.moveRight.bind(this)
+      this.moveStraight = this.moveStraight.bind(this)
       this.updateState = this.updateState.bind(this)
       this.setStartingPlatform = this.setStartingPlatform.bind(this)
       this._fall = this._fall.bind(this)
@@ -94,12 +121,34 @@ document.addEventListener("DOMContentLoaded", () => {
       this.needsToDraw = false
     }
 
+    moveLeft() {
+      this.isMovingLeft = true
+      this.isMovingRight = false
+    }
+
+    moveRight() {
+      this.isMovingLeft = false
+      this.isMovingRight = true
+    }
+
+    moveStraight() {
+      this.isMovingLeft = false
+      this.isMovingRight = false
+    }
+
     updateState() {
       // update vertical position
       if (this.isJumping) {
         this.bottom += jumperJumpSpeed
       } else {
         this.bottom -= jumperFallSpeed
+      }
+
+      // update horizontal position
+      if (this.isMovingLeft && this.left > 0) {
+        this.left = Math.max(this.left - jumperLeftRightSpeed, 0)
+      } else if (this.isMovingRight && this.right < stageWidth) {
+        this.left = Math.min(this.left + jumperLeftRightSpeed, stageWidth)
       }
 
       this._updateContainerBox()
