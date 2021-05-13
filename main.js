@@ -7,8 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const platformStartingPosition = 100
   const platformAdvancingLine = 400
   const platformCount = 5
-  const stageMoveSpeed = 4
-  const platformMoveSpeed = stageMoveSpeed
   const jumperMaxHeight = 200
   const jumperJumpSpeed = 8
   const jumperFallSpeed = 5
@@ -102,14 +100,14 @@ document.addEventListener("DOMContentLoaded", () => {
       this.jumper.moveStraight()
     }
 
-    _startUpdateLoop() {
-      this.updateLoopTicker =
-        setInterval(this._updateState, gameUpdateSpeedInMilliseconds)
-    }
-
     _startDrawLoop() {
       this.drawLoopTicker =
         setInterval(this._draw, gameDrawSpeedInMilliseconds)
+    }
+
+    _startUpdateLoop() {
+      this.updateLoopTicker =
+        setInterval(this._updateState, gameUpdateSpeedInMilliseconds)
     }
 
     _updateState() {
@@ -138,7 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
     top = this.bottom + this.height
     isJumping = true
     isFacingRight = true
-    jumpStartPoint = this.bottom
+    jumpHeight = 0
     isMovingLeft = false
     isMovingRight = false
     needsToDraw = true
@@ -153,6 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
       this.moveStraight = this.moveStraight.bind(this)
       this.setStartingPlatform = this.setStartingPlatform.bind(this)
       this._fall = this._fall.bind(this)
+      this._incrementJumpHeight = this._incrementJumpHeight.bind(this)
       this._jump = this._jump.bind(this)
       this._updateContainerBox = this._updateContainerBox.bind(this)
 
@@ -215,7 +214,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // update vertical position
       if (this.isJumping) {
-        this.bottom += jumperJumpSpeed
+        this._incrementJumpHeight()
+
+        // Move jumper but only if the stage isn't advancing. Once jumper
+        //   gets to a certain stage height, we move the stage down instead
+        //   to simulate the jumper moving up.
+        if (!game.isStageAdvancing()) { this.bottom += jumperJumpSpeed }
       } else {
         this.bottom -= jumperFallSpeed
       }
@@ -235,13 +239,13 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // reached max jump height; start falling
-      if (this.bottom > this.jumpStartPoint + jumperMaxHeight) {
+      if (this.isJumping && this.jumpHeight >= jumperMaxHeight) {
         this._fall()
       }
 
       // landed on platform; jump again
       if (!this.isJumping && game.platforms.isOnAPlatform(this)) {
-        this.jumpStartPoint = this.bottom
+        this.jumpHeight = 0
         this._jump()
       }
 
@@ -257,6 +261,10 @@ document.addEventListener("DOMContentLoaded", () => {
     _fall() {
       if (this.isJumping) { this.needsToUpdateJumpingCssClass = true }
       this.isJumping = false
+    }
+
+    _incrementJumpHeight() {
+      this.jumpHeight += jumperJumpSpeed
     }
 
     _jump() {
@@ -305,7 +313,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateState() {
       if (!game.isStageAdvancing()) { return }
 
-      this.bottom -= platformMoveSpeed
+      this.bottom -= jumperJumpSpeed
       this._updateContainerBox()
 
       if (this.top < 0) {
