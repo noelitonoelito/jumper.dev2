@@ -1,0 +1,16 @@
+#stage {
+  z-index: 1;
+  width: 400px;
+  height: 600px;
+  background-color: #ffff00;
+  position: relative;
+  overflow: hidden;
+}
+
+.platform-basic {
+  z-index: 2;
+  width: 85px;
+  height: 15px;
+  background-color: #008000;
+  position: absolute;
+}
