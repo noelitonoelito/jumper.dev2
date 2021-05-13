@@ -14,3 +14,11 @@
   background-color: #008000;
   position: absolute;
 }
+
+#jumper {
+  z-index: 3;
+  width: 60px;
+  height: 85px;
+  background-color: #ff0000;
+  position: absolute;
+}
