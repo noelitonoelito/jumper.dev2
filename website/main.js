@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   class Game {
     stage
+    jumper
     platforms
 
     constructor() {
@@ -24,13 +25,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     isStageAdvancing() {
-      return true
+      return false
     }
 
     start() {
       this.stage = document.getElementById("stage")
+      this.jumper = new Jumper()
       this.platforms = new Platforms()
       this.platforms.createPlatforms()
+      this.jumper.setStartingPlatform(this.platforms.getLowestPlatform())
 
       this._startUpdateLoop()
       this._startDrawLoop()
@@ -38,6 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     _draw() {
       this.platforms.draw()
+      this.jumper.draw()
     }
 
     _startUpdateLoop() {
@@ -50,6 +54,42 @@ document.addEventListener("DOMContentLoaded", () => {
 
     _updateState() {
       this.platforms.updateState()
+    }
+  }
+
+  class Jumper {
+    element
+    width = 60
+    height = 85
+    left = 50
+    bottom = 150
+    right = this.left + this.width
+    top = this.bottom + this.height
+
+    constructor() {
+      this.draw = this.draw.bind(this)
+      this.setStartingPlatform = this.setStartingPlatform.bind(this)
+      this._updateContainerBox = this._updateContainerBox.bind(this)
+
+      this.element = document.createElement("div")
+      this.element.id = "jumper"
+      game.stage.appendChild(this.element)
+    }
+
+    draw() {
+      this.element.style.left = `${this.left}px`
+      this.element.style.bottom = `${this.bottom}px`
+    }
+
+    setStartingPlatform(platform) {
+      this.left = platform.left
+      this.bottom = platform.top
+      this._updateContainerBox()
+    }
+
+    _updateContainerBox() {
+      this.right = this.left + this.width
+      this.top = this.bottom + this.height
     }
   }
 
@@ -120,6 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
     constructor() {
       this.createPlatforms = this.createPlatforms.bind(this)
       this.draw = this.draw.bind(this)
+      this.getLowestPlatform = this.getLowestPlatform.bind(this)
       this.updateState = this.updateState.bind(this)
     }
 
@@ -134,6 +175,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     draw() {
       this.listOfPlatforms.forEach((platform) => { platform.draw() })
+    }
+
+    getLowestPlatform() {
+      return this.listOfPlatforms[0]
     }
 
     updateState() {
