@@ -18,6 +18,9 @@ const URLS_TO_CACHE = [
   `/${APP_PREFIX}/images/controls/replay.svg`,
   `/${APP_PREFIX}/images/controls/right.svg`,
 
+  `/${APP_PREFIX}/images/jumpers/bob-icon.svg`,
+  `/${APP_PREFIX}/images/jumpers/bob-jumping.svg`,
+  `/${APP_PREFIX}/images/jumpers/bob-standing.svg`,
   `/${APP_PREFIX}/images/jumpers/caleb-icon.svg`,
   `/${APP_PREFIX}/images/jumpers/caleb-jumping.svg`,
   `/${APP_PREFIX}/images/jumpers/caleb-standing.svg`,
