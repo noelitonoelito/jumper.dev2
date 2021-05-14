@@ -2,8 +2,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // #region Game settings
   const gameUpdateSpeedInMilliseconds = 10
   const gameDrawSpeedInMilliseconds = 30
-  const stageWidth = 400
-  const stageHeight = 600
+  const defaultGameConsoleWidth = 410
+  const defaultGameConsoleHeight = 700
+  const defaultStageWidth = 400
+  const defaultStageHeight = 600
   const platformStartingPosition = 100
   const platformAdvancingLine = 400
   const stageMoveSpeed = 1
@@ -44,6 +46,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   class Game {
+    gameConsoleWidth = defaultGameConsoleWidth
+    gameConsoleHeight = defaultGameConsoleHeight
+    stageWidth = defaultStageWidth
+    stageHeight = defaultStageHeight
+    controlsHeight = 85
+    gameConsole
     stage
     scoreBoard
     jumper
@@ -53,7 +61,10 @@ document.addEventListener("DOMContentLoaded", () => {
     updateLoopTicker
     drawLoopTicker
     backgroundY = 0
+    gameConsoleTranslateX = 0
+    scale = 1
     isTouchEnabled = false
+    needsToAdjustGameToScreen = true
     needsToDraw = true
 
     constructor() {
@@ -69,10 +80,18 @@ document.addEventListener("DOMContentLoaded", () => {
       this._startUpdateLoop = this._startUpdateLoop.bind(this)
       this._updateState = this._updateState.bind(this)
       this._watchUserActions = this._watchUserActions.bind(this)
+      this._watchWindowResize = this._watchWindowResize.bind(this)
+      this._windowResized = this._windowResized.bind(this)
 
       this.isTouchEnabled = "ontouchstart" in window ||
         navigator.maxTouchPoints > 0 ||
         navigator.msMaxTouchPoints > 0
+
+      this.gameConsole = document.getElementById("gameConsole")
+      this.stage = document.getElementById("stage")
+
+      this._watchWindowResize()
+      setTimeout(this._windowResized, 10)
     }
 
     gameOver() {
@@ -87,7 +106,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     start() {
-      this.stage = document.getElementById("stage")
       this.jumper = new Jumper()
       this.platforms = new Platforms()
       this._createScoreBoard()
@@ -114,6 +132,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     _draw() {
+      if (this.needsToAdjustGameToScreen) {
+        this.stage.style.height = `${this.stageHeight}px`
+
+        this.gameConsole.style.height = `${this.gameConsoleHeight}px`
+
+        this.gameConsole.style.transform = `
+          translate(${this.gameConsoleTranslateX}px, 0px)
+          scale(${this.scale})
+        `
+
+        this.needsToAdjustGameToScreen = false
+      }
+
       if (this.needsToDraw) {
         this.stage.style.backgroundPositionY = `${this.backgroundY}px`
         this.scoreBoard.innerHTML = Math.floor(this.score)
@@ -205,6 +236,41 @@ document.addEventListener("DOMContentLoaded", () => {
         this.jumper.moveStraight,
         { passive: true }
       )
+    }
+
+    _watchWindowResize() {
+      window.addEventListener("resize", this._windowResized);
+    }
+
+    _windowResized() {
+      const screenWidth = window.innerWidth
+      const screenHeight = window.innerHeight
+      const bodyWidth = document.body.clientWidth
+      const screenRation = screenWidth / screenHeight
+      const maxRatioNeedingHeightIncrease = 0.62
+
+      if (screenRation <= maxRatioNeedingHeightIncrease) {
+        const newGameConsoleHeight =
+          this.gameConsoleWidth / (screenWidth / screenHeight)
+        const newStageHeight =
+          this.stageWidth / (screenWidth / (screenHeight - this.controlsHeight))
+
+        this.gameConsoleHeight = newGameConsoleHeight
+        this.stageHeight = newStageHeight
+      } else {
+        this.gameConsoleHeight = defaultGameConsoleHeight
+        this.stageHeight = defaultStageHeight
+      }
+
+      const needsABitMoreWidth = 6
+      this.gameConsoleTranslateX =
+        (bodyWidth - this.gameConsoleWidth + needsABitMoreWidth) / 2
+      this.scale = Math.min(
+        screenWidth / this.gameConsoleWidth,
+        screenHeight / this.gameConsoleHeight
+      )
+
+      this.needsToAdjustGameToScreen = true
     }
   }
 
@@ -309,8 +375,8 @@ document.addEventListener("DOMContentLoaded", () => {
       // update horizontal position
       if (this.isMovingLeft && this.left > 0) {
         this.left = Math.max(this.left - jumperLeftRightSpeed, 0)
-      } else if (this.isMovingRight && this.right < stageWidth) {
-        this.left = Math.min(this.left + jumperLeftRightSpeed, stageWidth)
+      } else if (this.isMovingRight && this.right < game.stageWidth) {
+        this.left = Math.min(this.left + jumperLeftRightSpeed, game.stageWidth)
       }
 
       this._updateContainerBox()
@@ -405,7 +471,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     _placeAtRandomLeft() {
-      this.left = randomNumber(0, stageWidth - this.width)
+      this.left = randomNumber(0, game.stageWidth - this.width)
     }
 
     _updateContainerBox() {
@@ -431,11 +497,11 @@ document.addEventListener("DOMContentLoaded", () => {
     createPlatforms() {
       let highestPlatform = this._getHighestPlatform()
 
-      if (highestPlatform?.top > stageHeight) { return }
+      if (highestPlatform?.top > game.stageHeight) { return }
 
       let nextPlatformBottom = this._getNextPlatformPosition()
 
-      while (nextPlatformBottom <= stageHeight + maxPlatformGap) {
+      while (nextPlatformBottom <= game.stageHeight + maxPlatformGap) {
         const newPlatform = new Platform(nextPlatformBottom)
         this.listOfPlatforms.push(newPlatform)
         nextPlatformBottom = this._getNextPlatformPosition()
