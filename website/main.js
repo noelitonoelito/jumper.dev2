@@ -58,8 +58,8 @@ document.addEventListener("DOMContentLoaded", () => {
     stageWidth = defaultStageWidth
     stageHeight = defaultStageHeight
     controlsHeight = 85
-    gameOptionsHight = 200
-    gameOverHight = 150
+    gameOptionsHeight = 160
+    gameOverHeight = 150
     gameConsole
     stage
     scoreBoard
@@ -132,7 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
     showGameOver() {
       this.isGameStarted = false
       this.gameOver.style.top =
-        `${(this.stageHeight - this.gameOverHight) / 2}px`
+        `${(this.stageHeight - this.gameOverHeight) / 2}px`
       this.gameOver.style.display = "flex"
     }
 
@@ -222,7 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     _showGameOptions() {
       this.gameOptions.style.top =
-        `${(this.stageHeight - this.gameOptionsHight) / 2}px`
+        `${(this.stageHeight - this.gameOptionsHeight) / 2}px`
       this.gameOptions.style.display = "flex"
     }
 

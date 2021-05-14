@@ -36,9 +36,9 @@ body {
   z-index: 5;
   position: absolute;
   top: 150px;
-  left: 100px;
-  width: 200px;
-  height: 200px;
+  left: 65px;
+  width: 270px;
+  height: 160px;
   background-color: #fa9dfdcc;
   border: 2px solid #000000;
   box-shadow: 0 0 4px 4px #0000004d;
@@ -48,7 +48,7 @@ body {
 }
 
 #gameOptions ul {
-  height: 150px;
+  height: 110px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -148,6 +148,10 @@ body {
   position: absolute;
 }
 
+#jumper.jumping {
+  background-image: url(images/jumpers/caleb-jumping.svg);
+}
+
 #jumper[data-character="zobie"] {
   background-image: url(images/jumpers/zobie-standing.svg);
 }
@@ -156,8 +160,12 @@ body {
   background-image: url(images/jumpers/zobie-jumping.svg);
 }
 
-#jumper.jumping {
-  background-image: url(images/jumpers/caleb-jumping.svg);
+#jumper[data-character="bob"] {
+  background-image: url(images/jumpers/bob-standing.svg);
+}
+
+#jumper[data-character="bob"].jumping {
+  background-image: url(images/jumpers/bob-jumping.svg);
 }
 
 #jumper.flip {
@@ -213,6 +221,10 @@ body {
 
 #gameOver div[data-character="zobie"] {
   background-image: url(images/jumpers/zobie-icon.svg);
+}
+
+#gameOver div[data-character="bob"] {
+  background-image: url(images/jumpers/bob-icon.svg);
 }
 
 #playAgainButton {

@@ -61,7 +61,6 @@ https://love2dev.com/blog/easily-create-a-baseline-set-of-progressive-web-app-ic
 
 == todo
 
-* [ ] Add Bob character
 * [ ] Add Sophia character
 * [ ] Add game sounds
 * [ ] Keep track of personal high score
@@ -99,3 +98,4 @@ parallax effect._
 * [x] _Force portrait mode_
 * [x] _Add favicon_
 * [x] _Make game a PWA (progressive web app) that works in github pages._
+* [x] _Add Bob character_
