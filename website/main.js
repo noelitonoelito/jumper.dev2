@@ -56,6 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
     scoreBoard
     jumper
     platforms
+    gameOver
     isGameOver = false
     score = 0
     updateLoopTicker
@@ -68,11 +69,9 @@ document.addEventListener("DOMContentLoaded", () => {
     needsToDraw = true
 
     constructor() {
-      this.gameOver = this.gameOver.bind(this)
       this.isStageAdvancing = this.isStageAdvancing.bind(this)
+      this.showGameOver = this.showGameOver.bind(this)
       this.start = this.start.bind(this)
-      this._createAndDrawGameOver = this._createAndDrawGameOver.bind(this)
-      this._createScoreBoard = this._createScoreBoard.bind(this)
       this._draw = this._draw.bind(this)
       this._keyPushedDown = this._keyPushedDown.bind(this)
       this._keyReleased = this._keyReleased.bind(this)
@@ -89,46 +88,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
       this.gameConsole = document.getElementById("gameConsole")
       this.stage = document.getElementById("stage")
+      this.scoreBoard = document.getElementById("scoreBoard")
+      this.gameOver = document.getElementById("gameOver")
 
       this._watchWindowResize()
       setTimeout(this._windowResized, 10)
-    }
-
-    gameOver() {
-      this.isGameOver = true
-      clearInterval(this.updateLoopTicker)
-      clearInterval(this.drawLoopTicker)
-      this._createAndDrawGameOver()
     }
 
     isStageAdvancing() {
       return this.jumper.bottom > platformAdvancingLine
     }
 
+    showGameOver() {
+      this.isGameOver = true
+      clearInterval(this.updateLoopTicker)
+      clearInterval(this.drawLoopTicker)
+      this.gameOver.style.display = "block"
+    }
+
     start() {
       this.jumper = new Jumper()
       this.platforms = new Platforms()
-      this._createScoreBoard()
       this.platforms.createPlatforms()
       this.jumper.setStartingPlatform(this.platforms.getLowestPlatform())
 
       this._watchUserActions()
       this._startUpdateLoop()
       this._startDrawLoop()
-    }
-
-    _createAndDrawGameOver() {
-      const gameOver = document.createElement("div")
-      gameOver.id = "gameOver"
-      gameOver.innerHTML = "Game Over"
-      this.stage.appendChild(gameOver)
-    }
-
-    _createScoreBoard() {
-      this.scoreBoard = document.createElement("div")
-      this.scoreBoard.id = "scoreBoard"
-      this.scoreBoard.innerHTML = this.score
-      this.stage.appendChild(this.scoreBoard)
     }
 
     _draw() {
@@ -383,7 +369,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // hit bottom of stage
       if (this.top <= 0) {
-        game.gameOver()
+        game.showGameOver()
       }
 
       // reached max jump height; start falling
