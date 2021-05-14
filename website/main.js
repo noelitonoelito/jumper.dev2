@@ -6,14 +6,42 @@ document.addEventListener("DOMContentLoaded", () => {
   const stageHeight = 600
   const platformStartingPosition = 100
   const platformAdvancingLine = 400
-  const platformCount = 5
   const stageMoveSpeed = 1
-  const jumperMaxHeight = 200
+  const jumperMaxHeight = 250
+  const maxPlatformGap = Math.floor(jumperMaxHeight * 0.9)
   const jumperJumpSpeed = 8
   const jumperFallSpeed = 5
   const jumperLeftRightSpeed = 6
   const scoreIncreaseRate = 0.1
   // #endregion Game settings
+
+  /**
+   * Generates a random number between `min` and `max`
+   * @param min the minimum number that should be returned
+   * @param max the maximum number that should be returned
+   * @returns a randomly generated number
+   */
+  function randomNumber(min, max) {
+    return (Math.random() * (max - min)) + min
+  }
+
+  // https://stackoverflow.com/questions/29325069/how-to-generate-random-numbers-biased-towards-one-value-in-a-range
+  /**
+   * Generates a random number between `min` and `max` favoring to the
+   * degree of `influence` towards the `bias` 
+   * @param min the minimum number that should be returned
+   * @param max the maximum number that should be returned
+   * @param bias the number within `min` and `max` that the result should
+   * gravitate towards
+   * @param influence a number from 0 to 1 to determine the amount of
+   * influence towards the bias. 0 - least influence; 1 - most influence
+   * @returns a randomly generated number
+   */
+  function getRandomNumberWithBias(min, max, bias, influence) {
+    const n = randomNumber(min, max)
+    const randomMixer = Math.random() * influence
+    return n * (1 - randomMixer) + bias * randomMixer
+  }
 
   class Game {
     stage
@@ -343,10 +371,10 @@ document.addEventListener("DOMContentLoaded", () => {
     needsToDraw = true
 
     constructor(newPlatformBottom) {
+      this.destroy = this.destroy.bind(this)
       this.draw = this.draw.bind(this)
       this.updateState = this.updateState.bind(this)
       this._placeAtRandomLeft = this._placeAtRandomLeft.bind(this)
-      this._placeAtTop = this._placeAtTop.bind(this)
       this._updateContainerBox = this._updateContainerBox.bind(this)
 
       this.bottom = newPlatformBottom
@@ -355,6 +383,10 @@ document.addEventListener("DOMContentLoaded", () => {
       this.element = document.createElement("div")
       this.element.classList.add("platform-basic")
       game.stage.appendChild(this.element)
+    }
+
+    destroy() {
+      this.element?.remove()
     }
 
     draw() {
@@ -369,22 +401,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
       this.bottom -= jumperJumpSpeed
       this._updateContainerBox()
-
-      if (this.top < 0) {
-        this._placeAtTop()
-        this._placeAtRandomLeft()
-        this._updateContainerBox()
-      }
-
       this.needsToDraw = true
     }
 
     _placeAtRandomLeft() {
-      this.left = Math.floor(Math.random() * (stageWidth - this.width))
-    }
-
-    _placeAtTop() {
-      this.bottom = stageHeight
+      this.left = randomNumber(0, stageWidth - this.width)
     }
 
     _updateContainerBox() {
@@ -402,14 +423,22 @@ document.addEventListener("DOMContentLoaded", () => {
       this.getLowestPlatform = this.getLowestPlatform.bind(this)
       this.isOnAPlatform = this.isOnAPlatform.bind(this)
       this.updateState = this.updateState.bind(this)
+      this._destroyPlatformsBelowStage = this._destroyPlatformsBelowStage.bind(this)
+      this._getHighestPlatform = this._getHighestPlatform.bind(this)
+      this._getNextPlatformPosition = this._getNextPlatformPosition.bind(this)
     }
 
     createPlatforms() {
-      for (let i = 0; i < platformCount; i++) {
-        const platformGap = stageHeight / platformCount
-        const newPlatformBottom = platformStartingPosition + (i * platformGap)
-        const newPlatform = new Platform(newPlatformBottom)
+      let highestPlatform = this._getHighestPlatform()
+
+      if (highestPlatform?.top > stageHeight) { return }
+
+      let nextPlatformBottom = this._getNextPlatformPosition()
+
+      while (nextPlatformBottom <= stageHeight + maxPlatformGap) {
+        const newPlatform = new Platform(nextPlatformBottom)
         this.listOfPlatforms.push(newPlatform)
+        nextPlatformBottom = this._getNextPlatformPosition()
       }
     }
 
@@ -433,6 +462,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
     updateState() {
       this.listOfPlatforms.forEach((platform) => { platform.updateState() })
+
+      if (game.isStageAdvancing()) {
+        this.createPlatforms()
+        this._destroyPlatformsBelowStage()
+      }
+    }
+
+    _destroyPlatformsBelowStage() {
+      for (let i = 0; i < this.listOfPlatforms.length; i++) {
+        if (this.listOfPlatforms[i].top < 0) {
+          this.listOfPlatforms.shift().destroy()
+          continue;
+        }
+
+        break;
+      }
+    }
+
+    _getHighestPlatform() {
+      return this.listOfPlatforms[this.listOfPlatforms.length - 1]
+    }
+
+    _getNextPlatformPosition() {
+      const highestPlatform = this._getHighestPlatform()
+      return highestPlatform ?
+        getRandomNumberWithBias(
+          highestPlatform.top,
+          highestPlatform.top + maxPlatformGap,
+          highestPlatform.top + maxPlatformGap,
+          1
+        ) :
+        platformStartingPosition
     }
   }
 

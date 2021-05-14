@@ -52,13 +52,15 @@ git subtree push --prefix website origin gh-pages
 * [ ] Add Sophia character
 * [ ] Add game sounds
 * [ ] Keep track of personal high score
-* [ ] Place platforms at random heights
 * [ ] Add narrow platforms
 * [ ] Add breaking platforms
 * [ ] Add horizontal moving platforms
 * [ ] Add vertical moving platforms
 * [ ] Add randomly moving platforms
 * [ ] Add group high score board (having groups will limit cheating)
+
+''''
+
 * [x] _Add stage and a platform_
 * [x] _Draw multiple platforms_
 * [x] _Make platforms move down the stage_
@@ -76,3 +78,4 @@ stop the jumper from moving past the top of the stage._
 * [x] _Move stage background image as stage advances to give it a
 parallax effect._
 * [x] _Add touchscreen controls_
+* [x] _Place platforms at random heights_
