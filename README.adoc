@@ -41,7 +41,6 @@ git subtree push --prefix website origin gh-pages
 
 == todo
 
-* [ ] Add full screen mode
 * [ ] Force portrait mode
 * [ ] Add restart game button on game over screen
 * [ ] Add character selection
@@ -59,7 +58,7 @@ git subtree push --prefix website origin gh-pages
 * [ ] Add randomly moving platforms
 * [ ] Add group high score board (having groups will limit cheating)
 
-''''
+'''
 
 * [x] _Add stage and a platform_
 * [x] _Draw multiple platforms_
@@ -79,3 +78,4 @@ stop the jumper from moving past the top of the stage._
 parallax effect._
 * [x] _Add touchscreen controls_
 * [x] _Place platforms at random heights_
+* [x] _Add full screen mode_
