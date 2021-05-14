@@ -52,11 +52,11 @@ body {
 }
 
 #leftButton {
-  background-image: url(images/arrows/left.svg);
+  background-image: url(images/controls/left.svg);
 }
 
 #rightButton {
-  background-image: url(images/arrows/right.svg);
+  background-image: url(images/controls/right.svg);
 }
 
 .platform-basic {
@@ -101,16 +101,35 @@ body {
 #gameOver {
   z-index: 5;
   display: none;
+  flex-direction: column;
+  justify-content: space-between;
   position: absolute;
   text-align: center;
   width: 180px;
-  height: 38px;
+  height: 150px;
   top: 250px;
   left: 110px;
   border: 2px solid #000000;
   box-shadow: 0 0 4px 4px #0000004d;
   font-size: xx-large;
   font-weight: 900;
-  padding: 5px;
+  padding: 0 0 1px;
   background-color: #ff0000;
+}
+
+#gameOver p {
+  margin: 0;
+  padding: 20px 0;
+}
+
+#playAgainButton {
+  width: 100%;
+  height: 66px;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  background-color: #c20000;
+  background-image: url(images/controls/replay.svg);
+  background-repeat: no-repeat;
+  background-position: center;
 }

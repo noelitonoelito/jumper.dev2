@@ -51,16 +51,15 @@ document.addEventListener("DOMContentLoaded", () => {
     stageWidth = defaultStageWidth
     stageHeight = defaultStageHeight
     controlsHeight = 85
+    gameOverHight = 150
     gameConsole
     stage
     scoreBoard
     jumper
     platforms
     gameOver
-    isGameOver = false
+    isGameStarted = false
     score = 0
-    updateLoopTicker
-    drawLoopTicker
     backgroundY = 0
     gameConsoleTranslateX = 0
     scale = 1
@@ -69,12 +68,16 @@ document.addEventListener("DOMContentLoaded", () => {
     needsToDraw = true
 
     constructor() {
+      this.initialize = this.initialize.bind(this)
       this.isStageAdvancing = this.isStageAdvancing.bind(this)
       this.showGameOver = this.showGameOver.bind(this)
-      this.start = this.start.bind(this)
+      this._beginGame = this._beginGame.bind(this)
       this._draw = this._draw.bind(this)
+      this._hideGameOver = this._hideGameOver.bind(this)
       this._keyPushedDown = this._keyPushedDown.bind(this)
       this._keyReleased = this._keyReleased.bind(this)
+      this._playAgain = this._playAgain.bind(this)
+      this._prepareToStartGame = this._prepareToStartGame.bind(this)
       this._startDrawLoop = this._startDrawLoop.bind(this)
       this._startUpdateLoop = this._startUpdateLoop.bind(this)
       this._updateState = this._updateState.bind(this)
@@ -95,26 +98,31 @@ document.addEventListener("DOMContentLoaded", () => {
       setTimeout(this._windowResized, 10)
     }
 
+    initialize() {
+      this.jumper = new Jumper()
+      this.platforms = new Platforms()
+      this._prepareToStartGame()
+      this._watchUserActions()
+      this._startUpdateLoop()
+      this._startDrawLoop()
+      this._watchWindowResize()
+      setTimeout(this._windowResized, 10)
+      this._beginGame()
+    }
+
     isStageAdvancing() {
       return this.jumper.bottom > platformAdvancingLine
     }
 
     showGameOver() {
-      this.isGameOver = true
-      clearInterval(this.updateLoopTicker)
-      clearInterval(this.drawLoopTicker)
-      this.gameOver.style.display = "block"
+      this.isGameStarted = false
+      this.gameOver.style.top =
+        `${(this.stageHeight - this.gameOverHight) / 2}px`
+      this.gameOver.style.display = "flex"
     }
 
-    start() {
-      this.jumper = new Jumper()
-      this.platforms = new Platforms()
-      this.platforms.createPlatforms()
-      this.jumper.setStartingPlatform(this.platforms.getLowestPlatform())
-
-      this._watchUserActions()
-      this._startUpdateLoop()
-      this._startDrawLoop()
+    _beginGame() {
+      this.isGameStarted = true
     }
 
     _draw() {
@@ -141,6 +149,10 @@ document.addEventListener("DOMContentLoaded", () => {
       this.jumper.draw()
     }
 
+    _hideGameOver() {
+      this.gameOver.style.display = "none"
+    }
+
     _keyPushedDown(e) {
       if (["ArrowLeft", "a", "A"].includes(e.key)) {
         this.jumper.moveLeft()
@@ -153,17 +165,31 @@ document.addEventListener("DOMContentLoaded", () => {
       this.jumper.moveStraight()
     }
 
+    _playAgain() {
+      this._hideGameOver()
+      this._prepareToStartGame()
+      this._beginGame()
+    }
+
+    _prepareToStartGame() {
+      this.platforms.destroyPlatforms()
+      this.platforms.createPlatforms()
+      this.jumper.setStartingPlatform(this.platforms.getLowestPlatform())
+      this.score = 0
+      this.needsToDraw = true
+    }
+
     _startDrawLoop() {
-      this.drawLoopTicker =
-        setInterval(this._draw, gameDrawSpeedInMilliseconds)
+      setInterval(this._draw, gameDrawSpeedInMilliseconds)
     }
 
     _startUpdateLoop() {
-      this.updateLoopTicker =
-        setInterval(this._updateState, gameUpdateSpeedInMilliseconds)
+      setInterval(this._updateState, gameUpdateSpeedInMilliseconds)
     }
 
     _updateState() {
+      if (!this.isGameStarted) { return }
+
       if (this.isStageAdvancing()) {
         this.backgroundY += stageMoveSpeed
         this.score += scoreIncreaseRate
@@ -175,11 +201,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     _watchUserActions() {
+      const playAgainButton = document.getElementById("playAgainButton")
       const leftButton = document.getElementById("leftButton")
       const rightButton = document.getElementById("rightButton")
 
       document.addEventListener("keydown", this._keyPushedDown)
       document.addEventListener("keyup", this._keyReleased)
+
+      playAgainButton.addEventListener("click", this._playAgain)
 
       leftButton.addEventListener(
         "mousedown",
@@ -344,8 +373,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     updateState() {
-      if (game.isGameOver) { return }
-
       // update vertical position
       if (this.isJumping) {
         this._incrementJumpHeight()
@@ -390,6 +417,7 @@ document.addEventListener("DOMContentLoaded", () => {
       this.left = platform.left
       this.bottom = platform.top
       this._updateContainerBox()
+      this.needsToDraw = true
     }
 
     _fall() {
@@ -471,6 +499,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     constructor() {
       this.createPlatforms = this.createPlatforms.bind(this)
+      this.destroyPlatforms = this.destroyPlatforms.bind(this)
       this.draw = this.draw.bind(this)
       this.getLowestPlatform = this.getLowestPlatform.bind(this)
       this.isOnAPlatform = this.isOnAPlatform.bind(this)
@@ -492,6 +521,11 @@ document.addEventListener("DOMContentLoaded", () => {
         this.listOfPlatforms.push(newPlatform)
         nextPlatformBottom = this._getNextPlatformPosition()
       }
+    }
+
+    destroyPlatforms() {
+      for (const platform of this.listOfPlatforms) { platform.destroy() }
+      this.listOfPlatforms.splice(0, this.listOfPlatforms.length)
     }
 
     draw() {
@@ -550,5 +584,5 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const game = new Game()
-  game.start()
+  game.initialize()
 })
