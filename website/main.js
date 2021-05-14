@@ -17,16 +17,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const scoreIncreaseRate = 0.1
   // #endregion Game settings
 
-  /**
-   * Generates a random number between `min` and `max`
-   * @param min the minimum number that should be returned
-   * @param max the maximum number that should be returned
-   * @returns a randomly generated number
-   */
-  function randomNumber(min, max) {
-    return (Math.random() * (max - min)) + min
-  }
-
   // https://stackoverflow.com/questions/29325069/how-to-generate-random-numbers-biased-towards-one-value-in-a-range
   /**
    * Generates a random number between `min` and `max` favoring to the
@@ -43,6 +33,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const n = randomNumber(min, max)
     const randomMixer = Math.random() * influence
     return n * (1 - randomMixer) + bias * randomMixer
+  }
+
+  /**
+   * Generates a random number between `min` and `max`
+   * @param min the minimum number that should be returned
+   * @param max the maximum number that should be returned
+   * @returns a randomly generated number
+   */
+  function randomNumber(min, max) {
+    return (Math.random() * (max - min)) + min
+  }
+
+  function registerServiceWorker() {
+    navigator?.serviceWorker?.register(
+      "/jumper/serviceWorker.js",
+      { scope: "/jumper/" }
+    )
   }
 
   class Game {
@@ -629,6 +636,8 @@ document.addEventListener("DOMContentLoaded", () => {
         platformStartingPosition
     }
   }
+
+  registerServiceWorker()
 
   const game = new Game()
   game.initialize()

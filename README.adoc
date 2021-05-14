@@ -26,6 +26,17 @@ For the best results with SVG Minify, I used Inkscape before uploading to:
 . select [Clean Up Document] from the [File] menu
 . save as a new SVG with the file type as "Plain SVG (*.svg)"
 
+== favicon generation
+
+Used https://realfavicongenerator.net/[Real Favicon Generator] to help create
+the favicons and related resources need for the website to support different
+browsers/operating systems. It supports PNG, JPG, and SVG
+
+== compress png files
+
+Used the online PNG compression tool https://tinypng.com/[TinyPNG] to make
+all PNG images as small as possible.
+
 == deploy to github pages
 
 In VS Code's [Terminal] menu, click [Run Task...] and select
@@ -39,11 +50,17 @@ project.
 git subtree push --prefix website origin gh-pages
 ----
 
+== pwa
+=== image sizes needed
+
+https://love2dev.com/blog/easily-create-a-baseline-set-of-progressive-web-app-icons/
+
+=== publish to app stores
+
+  To publish your PWA to app stores you can use https://www.pwabuilder.com/pwabuilder[pwabuilder].
+
 == todo
 
-* [ ] Force portrait mode
-* [ ] Add favicon
-* [ ] Make game a PWA (progressive web app) that works in github pages.
 * [ ] Add Bob character
 * [ ] Add Sophia character
 * [ ] Add game sounds
@@ -79,3 +96,6 @@ parallax effect._
 * [x] _Add restart game button on game over screen_
 * [x] _Add character selection_
 * [x] _Add Zobie character_
+* [x] _Force portrait mode_
+* [x] _Add favicon_
+* [x] _Make game a PWA (progressive web app) that works in github pages._
