@@ -14,8 +14,27 @@
   <div id="gameConsole">
     <div id="stage">
       <div id="scoreBoard">0</div>
+      <div id="gameOptions">
+        <ul>
+          <li>
+            <input id="characterCaleb" name="character" type="radio" value="caleb" checked />
+            <label for="characterCaleb" tabindex="0">
+              <img src="images/jumpers/caleb-icon.svg" alt="Caleb" />
+            </label>
+          </li>
+          <li>
+            <input id="characterZobie" name="character" type="radio" value="zobie" />
+            <label for="characterZobie" tabindex="0">
+              <img src="images/jumpers/zobie-icon.svg" alt="Zobie" />
+            </label>
+          </li>
+        </ul>
+        <button id="playButton" aria-label="Play"></button>
+      </div>
       <div id="gameOver">
-        <p>Game Over</p>
+        <div data-character="caleb">
+          <img src="images/game-over.svg" alt="Game Over" width="50" height="50" />
+        </div>
         <button id="playAgainButton" aria-label="Play Again"></button>
       </div>
     </div>

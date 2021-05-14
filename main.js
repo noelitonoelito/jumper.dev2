@@ -51,12 +51,14 @@ document.addEventListener("DOMContentLoaded", () => {
     stageWidth = defaultStageWidth
     stageHeight = defaultStageHeight
     controlsHeight = 85
+    gameOptionsHight = 200
     gameOverHight = 150
     gameConsole
     stage
     scoreBoard
     jumper
     platforms
+    gameOptions
     gameOver
     isGameStarted = false
     score = 0
@@ -73,11 +75,14 @@ document.addEventListener("DOMContentLoaded", () => {
       this.showGameOver = this.showGameOver.bind(this)
       this._beginGame = this._beginGame.bind(this)
       this._draw = this._draw.bind(this)
+      this._hideGameOptions = this._hideGameOptions.bind(this)
       this._hideGameOver = this._hideGameOver.bind(this)
+      this._initializeGameOptions = this._initializeGameOptions.bind(this)
       this._keyPushedDown = this._keyPushedDown.bind(this)
       this._keyReleased = this._keyReleased.bind(this)
       this._playAgain = this._playAgain.bind(this)
       this._prepareToStartGame = this._prepareToStartGame.bind(this)
+      this._showGameOptions = this._showGameOptions.bind(this)
       this._startDrawLoop = this._startDrawLoop.bind(this)
       this._startUpdateLoop = this._startUpdateLoop.bind(this)
       this._updateState = this._updateState.bind(this)
@@ -92,6 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
       this.gameConsole = document.getElementById("gameConsole")
       this.stage = document.getElementById("stage")
       this.scoreBoard = document.getElementById("scoreBoard")
+      this.gameOptions = document.getElementById("gameOptions")
       this.gameOver = document.getElementById("gameOver")
 
       this._watchWindowResize()
@@ -101,13 +107,15 @@ document.addEventListener("DOMContentLoaded", () => {
     initialize() {
       this.jumper = new Jumper()
       this.platforms = new Platforms()
+      this._initializeGameOptions()
       this._prepareToStartGame()
       this._watchUserActions()
       this._startUpdateLoop()
       this._startDrawLoop()
       this._watchWindowResize()
       setTimeout(this._windowResized, 10)
-      this._beginGame()
+      // wait till html settles before showing game options to center vertically
+      setTimeout(this._showGameOptions, 20)
     }
 
     isStageAdvancing() {
@@ -122,6 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     _beginGame() {
+      this._hideGameOptions()
       this.isGameStarted = true
     }
 
@@ -149,8 +158,33 @@ document.addEventListener("DOMContentLoaded", () => {
       this.jumper.draw()
     }
 
+    _hideGameOptions() {
+      this.gameOptions.style.display = "none"
+    }
+
     _hideGameOver() {
       this.gameOver.style.display = "none"
+    }
+
+    _initializeGameOptions() {
+      const radioElements = this.gameOptions.getElementsByTagName("input")
+      const handleChange = (event) => {
+        for (const radioElement of radioElements) {
+          if (radioElement === event.target) { continue }
+          radioElement.removeAttribute("checked")
+        }
+
+        const character = event.target.value
+        const gameOverCharacter = document.querySelector("#gameOver div");
+
+        event.target.setAttribute("checked", true)
+        this.jumper.setCharacter(character)
+        gameOverCharacter.setAttribute("data-character", character)
+      }
+
+      for (const radioElement of radioElements) {
+        radioElement.addEventListener("change", handleChange)
+      }
     }
 
     _keyPushedDown(e) {
@@ -168,7 +202,7 @@ document.addEventListener("DOMContentLoaded", () => {
     _playAgain() {
       this._hideGameOver()
       this._prepareToStartGame()
-      this._beginGame()
+      this._showGameOptions()
     }
 
     _prepareToStartGame() {
@@ -177,6 +211,12 @@ document.addEventListener("DOMContentLoaded", () => {
       this.jumper.setStartingPlatform(this.platforms.getLowestPlatform())
       this.score = 0
       this.needsToDraw = true
+    }
+
+    _showGameOptions() {
+      this.gameOptions.style.top =
+        `${(this.stageHeight - this.gameOptionsHight) / 2}px`
+      this.gameOptions.style.display = "flex"
     }
 
     _startDrawLoop() {
@@ -201,6 +241,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     _watchUserActions() {
+      const playButton = document.getElementById("playButton")
       const playAgainButton = document.getElementById("playAgainButton")
       const leftButton = document.getElementById("leftButton")
       const rightButton = document.getElementById("rightButton")
@@ -208,6 +249,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.addEventListener("keydown", this._keyPushedDown)
       document.addEventListener("keyup", this._keyReleased)
 
+      playButton.addEventListener("click", this._beginGame)
       playAgainButton.addEventListener("click", this._playAgain)
 
       leftButton.addEventListener(
@@ -254,7 +296,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     _watchWindowResize() {
-      window.addEventListener("resize", this._windowResized);
+      window.addEventListener("resize", this._windowResized)
     }
 
     _windowResized() {
@@ -312,6 +354,7 @@ document.addEventListener("DOMContentLoaded", () => {
       this.moveLeft = this.moveLeft.bind(this)
       this.moveRight = this.moveRight.bind(this)
       this.moveStraight = this.moveStraight.bind(this)
+      this.setCharacter = this.setCharacter.bind(this)
       this.setStartingPlatform = this.setStartingPlatform.bind(this)
       this._fall = this._fall.bind(this)
       this._incrementJumpHeight = this._incrementJumpHeight.bind(this)
@@ -411,6 +454,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       this.needsToDraw = true
+    }
+
+    setCharacter(character) {
+      this.element.setAttribute("data-character", character)
     }
 
     setStartingPlatform(platform) {

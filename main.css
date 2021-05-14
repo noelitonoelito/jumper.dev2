@@ -32,6 +32,79 @@ body {
   box-shadow: inset 0 0 5px 5px #0000004d;
 }
 
+#gameOptions {
+  z-index: 5;
+  position: absolute;
+  top: 150px;
+  left: 100px;
+  width: 200px;
+  height: 200px;
+  background-color: #fa9dfdcc;
+  border: 2px solid #000000;
+  box-shadow: 0 0 4px 4px #0000004d;
+  display: none;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+#gameOptions ul {
+  height: 150px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+#gameOptions li {
+  margin: 0;
+  padding: 4px;
+}
+
+#gameOptions li input[type="radio"] {
+  display: none;
+}
+
+#gameOptions li label {
+  display: block;
+  width: 50px;
+  height: 50px;
+  border: 0;
+  padding: 5px;
+  margin: 5PX;
+  background-color: #f64ffb;
+  border-radius: 25%;
+  border: 2px dashed #6d0470;
+  text-align: center;
+  opacity: 0.7;
+}
+
+#gameOptions li input[checked]+label {
+  width: 60px;
+  height: 55px;
+  margin: 0;
+  padding-top: 10px;
+  border: 2px solid #6d0470;
+  opacity: 1;
+}
+
+#playButton {
+  height: 50px;
+  font-weight: 900;
+  font-size: 20px;
+  border: 0;
+  padding: 10px;
+  margin: 0;
+  background-color: #f64ffb;
+  justify-self: flex-end;
+  background-image: url(images/controls/play.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 #controls {
   padding: 5px;
   width: 394px;
@@ -75,6 +148,14 @@ body {
   position: absolute;
 }
 
+#jumper[data-character="zobie"] {
+  background-image: url(images/jumpers/zobie-standing.svg);
+}
+
+#jumper[data-character="zobie"].jumping {
+  background-image: url(images/jumpers/zobie-jumping.svg);
+}
+
 #jumper.jumping {
   background-image: url(images/jumpers/caleb-jumping.svg);
 }
@@ -114,12 +195,24 @@ body {
   font-size: xx-large;
   font-weight: 900;
   padding: 0 0 1px;
-  background-color: #ff0000;
+  background-color: #fd5a5a;
 }
 
-#gameOver p {
-  margin: 0;
-  padding: 20px 0;
+#gameOver div {
+  width: 50px;
+  height: 50px;
+  margin: 20px auto;
+  padding: 0;
+}
+
+#gameOver div {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url(images/jumpers/caleb-icon.svg);
+}
+
+#gameOver div[data-character="zobie"] {
+  background-image: url(images/jumpers/zobie-icon.svg);
 }
 
 #playAgainButton {
@@ -128,7 +221,7 @@ body {
   border: 0;
   margin: 0;
   padding: 0;
-  background-color: #c20000;
+  background-color: #c32121;
   background-image: url(images/controls/replay.svg);
   background-repeat: no-repeat;
   background-position: center;
