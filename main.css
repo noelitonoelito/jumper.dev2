@@ -46,7 +46,7 @@ body {
   border: 0;
   margin: 0;
   padding: 0;
-  background-color: transparent ;
+  background-color: transparent;
   background-repeat: no-repeat;
   background-position: center;
 }
@@ -87,7 +87,7 @@ body {
   z-index: 4;
   position: absolute;
   text-align: right;
-  min-width: 50px;
+  min-width: 35px;
   top: 20px;
   right: 20px;
   border: 2px solid #000000;
@@ -100,8 +100,11 @@ body {
 
 #gameOver {
   z-index: 5;
+  display: none;
   position: absolute;
   text-align: center;
+  width: 180px;
+  height: 38px;
   top: 250px;
   left: 110px;
   border: 2px solid #000000;
