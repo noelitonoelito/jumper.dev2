@@ -3,5 +3,9 @@
   "editor.insertSpaces": true,
   "editor.rulers": [
     80
+  ],
+  "cSpell.words": [
+    "WASD",
+    "Zobie"
   ]
 }

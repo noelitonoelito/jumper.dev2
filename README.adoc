@@ -42,8 +42,6 @@ git subtree push --prefix website origin gh-pages
 == todo
 
 * [ ] Force portrait mode
-* [ ] Add character selection
-* [ ] Add Zobie character
 * [ ] Add favicon
 * [ ] Make game a PWA (progressive web app) that works in github pages.
 * [ ] Add Bob character
@@ -79,3 +77,5 @@ parallax effect._
 * [x] _Place platforms at random heights_
 * [x] _Add full screen mode_
 * [x] _Add restart game button on game over screen_
+* [x] _Add character selection_
+* [x] _Add Zobie character_
