@@ -77,7 +77,7 @@ body {
   margin: 5PX;
   background-color: #f64ffb;
   border-radius: 25%;
-  border: 2px dashed #6d0470;
+  border: 2px solid #6d0470;
   text-align: center;
   opacity: 0.7;
 }
@@ -87,7 +87,6 @@ body {
   height: 55px;
   margin: 0;
   padding-top: 10px;
-  border: 2px solid #6d0470;
   opacity: 1;
 }
 

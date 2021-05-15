@@ -8,14 +8,28 @@ over. The higher the user goes, the higher the score.
 
 == code development
 
-This project was created using https://code.visualstudio.com[VS Code].
+This project was created using the free code editor
+https://code.visualstudio.com[VS Code].
 
-== edit image svg source
+== images
+=== edit image SVG source
 
-Svg images in the `./asset-source` directory were created using
-https://inkscape.org[Inkscape].
+Svg images in the `./asset-source` directory were created using the free vector
+image editor https://inkscape.org[Inkscape].
 
-== compress SVG files
+=== edit raster images
+
+Although it wasn't really used at the end, the free raster image editor
+https://www.getpaint.net/[Paint.NET] can be used to edit PNG, JPG, and GIF
+images.
+
+=== favicon generation
+
+Used https://realfavicongenerator.net/[Real Favicon Generator] to help create
+some of the favicons and related resources need for the website to support
+different browsers/operating systems. It supports PNG, JPG, and SVG sources.
+
+=== compress SVG files
 
 Used the online SVG compression tool https://www.svgminify.com/[SVG Minify] to
 make all SVG images as small as possible.
@@ -26,16 +40,26 @@ For the best results with SVG Minify, I used Inkscape before uploading to:
 . select [Clean Up Document] from the [File] menu
 . save as a new SVG with the file type as "Plain SVG (*.svg)"
 
-== favicon generation
-
-Used https://realfavicongenerator.net/[Real Favicon Generator] to help create
-the favicons and related resources need for the website to support different
-browsers/operating systems. It supports PNG, JPG, and SVG
-
-== compress png files
+=== compress PNG files
 
 Used the online PNG compression tool https://tinypng.com/[TinyPNG] to make
 all PNG images as small as possible.
+
+== sounds
+=== purchase music/sound effects
+
+The sounds used in this project are from
+https://audiojungle.net/[Audio Jungle]. You can download watermarked samples of
+their sounds to test with and purchase the music after you have decided on what
+sounds work best for your project.
+
+=== edit audio files
+
+Used https://www.audacityteam.org/[Audacity]
+
+=== using sounds in JavaScript
+
+https://www.w3schools.com/jsref/dom_obj_audio.asp[HTML DOM Audio Object]
 
 == deploy to github pages
 
@@ -53,16 +77,39 @@ git subtree push --prefix website origin gh-pages
 == pwa
 === image sizes needed
 
-https://love2dev.com/blog/easily-create-a-baseline-set-of-progressive-web-app-icons/
+https://love2dev.com/blog/easily-create-a-baseline-set-of-progressive-web-app-icons/[Easily Create a Baseline Set of Progressive Web App Icons]
 
 === publish to app stores
 
-  To publish your PWA to app stores you can use https://www.pwabuilder.com/pwabuilder[pwabuilder].
+To publish your PWA to app stores you can use https://www.pwabuilder.com/pwabuilder[pwabuilder].
+
+== credit
+
+Software development:
+
+https://github.com/noelitonoelito[Jeffrey Cardona]
+
+Art work:
+
+* Caleb character by SquidInk
+* Zobie character by Darth Pangolin
+* YoManBob! character by https://www.ailurusgraphics.com/[Robert Primeaux]
+
+Sound:
+
+* https://audiojungle.net/item/button-clicks/26591514[Menu sound] by https://audiojungle.net/user/alien-expo[Alien-Expo]
+* https://audiojungle.net/item/game-jump/29146485[Jump sounds] by https://audiojungle.net/user/sounddivision[SoundDivision]
+* https://audiojungle.net/item/cartoon-game-over/31553362[Game over sound] by https://audiojungle.net/user/phillipmariani[PhillipMariani]
+* https://audiojungle.net/item/retro-game/21465199[Background music] by https://audiojungle.net/user/WormwoodMusic[WormwoodMusic]
 
 == todo
 
+* [ ] Add joystick control
+* [ ] Add options to disable background music and all sounds
+* [ ] Adjust platform advancing line when stage height changes
+* [ ] Add jumping physics
+* [ ] Add menu keyboard support
 * [ ] Add Sophia character
-* [ ] Add game sounds
 * [ ] Keep track of personal high score
 * [ ] Add narrow platforms
 * [ ] Add breaking platforms
@@ -70,6 +117,7 @@ https://love2dev.com/blog/easily-create-a-baseline-set-of-progressive-web-app-ic
 * [ ] Add vertical moving platforms
 * [ ] Add randomly moving platforms
 * [ ] Add group high score board (having groups will limit cheating)
+* [ ] Add About dialog
 
 '''
 
@@ -99,3 +147,4 @@ parallax effect._
 * [x] _Add favicon_
 * [x] _Make game a PWA (progressive web app) that works in github pages._
 * [x] _Add Bob character_
+* [x] _Add game sounds_
