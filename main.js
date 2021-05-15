@@ -11,6 +11,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const stageMoveSpeed = 1
   const jumperMaxHeight = 250
   const maxPlatformGap = Math.floor(jumperMaxHeight * 0.9)
+  const mainVolume = 0.75
+  const menuSoundVolume = 1
+  const musicVolume = 0.1
+  const gameOverSoundVolume = 0.6
+  const jumpSoundVolume = 0.4
   const jumperJumpSpeed = 8
   const jumperFallSpeed = 5
   const jumperLeftRightSpeed = 6
@@ -45,6 +50,16 @@ document.addEventListener("DOMContentLoaded", () => {
     return (Math.random() * (max - min)) + min
   }
 
+  /**
+   * Generates a random integer between `min` and `max`
+   * @param min the minimum number that should be returned
+   * @param max the maximum number that should be returned
+   * @returns a randomly generated number
+   */
+  function randomInt(min, max) {
+    return Math.round((Math.random() * (max - min)) + min)
+  }
+
   function registerServiceWorker() {
     navigator?.serviceWorker?.register(
       "/jumper/serviceWorker.js",
@@ -67,6 +82,9 @@ document.addEventListener("DOMContentLoaded", () => {
     platforms
     gameOptions
     gameOver
+    music
+    gameOverSound
+    menuSound
     isGameStarted = false
     score = 0
     backgroundY = 0
@@ -85,13 +103,18 @@ document.addEventListener("DOMContentLoaded", () => {
       this._hideGameOptions = this._hideGameOptions.bind(this)
       this._hideGameOver = this._hideGameOver.bind(this)
       this._initializeGameOptions = this._initializeGameOptions.bind(this)
+      this._initializeSounds = this._initializeSounds.bind(this)
       this._keyPushedDown = this._keyPushedDown.bind(this)
       this._keyReleased = this._keyReleased.bind(this)
       this._playAgain = this._playAgain.bind(this)
+      this._playGameOverSound = this._playGameOverSound.bind(this)
+      this._playMenuSound = this._playMenuSound.bind(this)
+      this._playMusic = this._playMusic.bind(this)
       this._prepareToStartGame = this._prepareToStartGame.bind(this)
       this._showGameOptions = this._showGameOptions.bind(this)
       this._startDrawLoop = this._startDrawLoop.bind(this)
       this._startUpdateLoop = this._startUpdateLoop.bind(this)
+      this._stopMusic = this._stopMusic.bind(this)
       this._updateState = this._updateState.bind(this)
       this._watchUserActions = this._watchUserActions.bind(this)
       this._watchWindowResize = this._watchWindowResize.bind(this)
@@ -106,6 +129,9 @@ document.addEventListener("DOMContentLoaded", () => {
       this.scoreBoard = document.getElementById("scoreBoard")
       this.gameOptions = document.getElementById("gameOptions")
       this.gameOver = document.getElementById("gameOver")
+      this.menuSound = document.getElementById("menuSound")
+      this.music = document.getElementById("backgroundMusic")
+      this.gameOverSound = document.getElementById("gameOverSound")
 
       this._watchWindowResize()
       setTimeout(this._windowResized, 10)
@@ -114,6 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initialize() {
       this.jumper = new Jumper()
       this.platforms = new Platforms()
+      this._initializeSounds()
       this._initializeGameOptions()
       this._prepareToStartGame()
       this._watchUserActions()
@@ -130,6 +157,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     showGameOver() {
+      this._stopMusic()
+      this._playGameOverSound()
       this.isGameStarted = false
       this.gameOver.style.top =
         `${(this.stageHeight - this.gameOverHeight) / 2}px`
@@ -137,8 +166,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     _beginGame() {
-      this._hideGameOptions()
-      this.isGameStarted = true
+      this._playMenuSound()
+
+      // wait a bit for the menu sound to play before starting the game
+      setTimeout(() => {
+        this._hideGameOptions()
+        this._playMusic()
+        this.isGameStarted = true
+      }, 250)
     }
 
     _draw() {
@@ -176,13 +211,17 @@ document.addEventListener("DOMContentLoaded", () => {
     _initializeGameOptions() {
       const radioElements = this.gameOptions.getElementsByTagName("input")
       const handleChange = (event) => {
+        if (event.target.getAttribute("checked")) { return }
+
+        this._playMenuSound()
+
         for (const radioElement of radioElements) {
           if (radioElement === event.target) { continue }
           radioElement.removeAttribute("checked")
         }
 
         const character = event.target.value
-        const gameOverCharacter = document.querySelector("#gameOver div");
+        const gameOverCharacter = document.querySelector("#gameOver div")
 
         event.target.setAttribute("checked", true)
         this.jumper.setCharacter(character)
@@ -192,6 +231,24 @@ document.addEventListener("DOMContentLoaded", () => {
       for (const radioElement of radioElements) {
         radioElement.addEventListener("change", handleChange)
       }
+    }
+
+    _initializeSounds() {
+      this.music.volume = musicVolume * mainVolume
+      this.music.addEventListener("ended", () => {
+        this.music.currentTime = 0
+        this.music.play()
+      }, false)
+
+      this.gameOverSound.volume = gameOverSoundVolume * mainVolume
+      this.gameOverSound.addEventListener("ended", () => {
+        this.gameOverSound.currentTime = 0
+      }, false)
+
+      this.menuSound.volume = menuSoundVolume * mainVolume
+      this.menuSound.addEventListener("ended", () => {
+        this.menuSound.currentTime = 0
+      }, false)
     }
 
     _keyPushedDown(e) {
@@ -207,9 +264,25 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     _playAgain() {
+      this._playMenuSound()
       this._hideGameOver()
       this._prepareToStartGame()
       this._showGameOptions()
+    }
+
+    _playGameOverSound() {
+      this.gameOverSound.currentTime = 0
+      this.gameOverSound.play()
+    }
+
+    _playMenuSound() {
+      this.menuSound.currentTime = 0
+      this.menuSound.play()
+    }
+
+    _playMusic() {
+      this.music.currentTime = 0
+      this.music.play()
     }
 
     _prepareToStartGame() {
@@ -232,6 +305,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     _startUpdateLoop() {
       setInterval(this._updateState, gameUpdateSpeedInMilliseconds)
+    }
+
+    _stopMusic() {
+      if (this.music.ended) { return }
+      this.music.pause()
+      this.music.currentTime = 0
     }
 
     _updateState() {
@@ -340,13 +419,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   class Jumper {
     element
+    jumpSound
     width = 60
     height = 85
     left = 50
     bottom = 150
     right = this.left + this.width
     top = this.bottom + this.height
-    isJumping = true
+    isJumping = false
     isFacingRight = true
     jumpHeight = 0
     isMovingLeft = false
@@ -365,12 +445,17 @@ document.addEventListener("DOMContentLoaded", () => {
       this.setStartingPlatform = this.setStartingPlatform.bind(this)
       this._fall = this._fall.bind(this)
       this._incrementJumpHeight = this._incrementJumpHeight.bind(this)
+      this._initializeSounds = this._initializeSounds.bind(this)
       this._jump = this._jump.bind(this)
+      this._playJumpSound = this._playJumpSound.bind(this)
+      this._stopJumpSound = this._stopJumpSound.bind(this)
       this._updateContainerBox = this._updateContainerBox.bind(this)
 
       this.element = document.createElement("div")
       this.element.id = "jumper"
       game.stage.appendChild(this.element)
+
+      this._initializeSounds()
     }
 
     draw() {
@@ -483,14 +568,33 @@ document.addEventListener("DOMContentLoaded", () => {
       this.jumpHeight += jumperJumpSpeed
     }
 
+    _initializeSounds() {
+      this.jumpSound = new Audio(`sounds/jump-${randomInt(1, 4)}.mp3`)
+      this.jumpSound.volume = jumpSoundVolume * mainVolume
+    }
+
     _jump() {
       if (!this.isJumping) { this.needsToUpdateJumpingCssClass = true }
       this.isJumping = true
+      this._stopJumpSound()
+      this._playJumpSound()
+    }
+
+    _playJumpSound() {
+      this.jumpSound.src = `sounds/jump-${randomInt(1, 4)}.mp3`
+      this.jumpSound.currentTime = 0
+      this.jumpSound.play()
     }
 
     _updateContainerBox() {
       this.right = this.left + this.width
       this.top = this.bottom + this.height
+    }
+
+    _stopJumpSound() {
+      if (this.jumpSound.ended) { return }
+      this.jumpSound.pause()
+      this.jumpSound.currentTime = 0
     }
   }
 
@@ -613,10 +717,10 @@ document.addEventListener("DOMContentLoaded", () => {
       for (let i = 0; i < this.listOfPlatforms.length; i++) {
         if (this.listOfPlatforms[i].top < 0) {
           this.listOfPlatforms.shift().destroy()
-          continue;
+          continue
         }
 
-        break;
+        break
       }
     }
 

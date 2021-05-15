@@ -3,7 +3,7 @@
 const APP_PREFIX = "jumper"
 // version of the off-line cache.
 //   change this value every time you want to update cache.
-const VERSION = "v0.20.0"
+const VERSION = "v0.21.0"
 const CACHE_NAME = `${APP_PREFIX}_${VERSION}`
 const URLS_TO_CACHE = [
   // use "/" instead of "/index.html"
@@ -30,7 +30,15 @@ const URLS_TO_CACHE = [
 
   `/${APP_PREFIX}/images/platforms/basic.svg`,
 
-  `/${APP_PREFIX}/images/stages/clouds.svg`
+  `/${APP_PREFIX}/images/stages/clouds.svg`,
+
+  `/${APP_PREFIX}/sounds/background-music.mp3`,
+  `/${APP_PREFIX}/sounds/click.mp3`,
+  `/${APP_PREFIX}/sounds/game-over.mp3`,
+  `/${APP_PREFIX}/sounds/jump-1.mp3`,
+  `/${APP_PREFIX}/sounds/jump-2.mp3`,
+  `/${APP_PREFIX}/sounds/jump-3.mp3`,
+  `/${APP_PREFIX}/sounds/jump-4.mp3`
 ]
 
 function cacheResources(event) {
